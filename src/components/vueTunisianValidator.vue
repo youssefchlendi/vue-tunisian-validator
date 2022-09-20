@@ -1,8 +1,11 @@
 <template>
   <div :class="valid ? '' : 'vtv-invalid'">
     <slot></slot>
-    {{ valid }}
   </div>
+  <div class="vtv-error-message" v-if="!valid">
+    {{ validationMessage }}
+  </div>
+  {{ valid }}
 </template>
 <script setup>
 import { ref, toRefs, defineProps, watch } from "vue";
@@ -14,8 +17,12 @@ const props = defineProps({
   value: {
     default: "",
   },
+  message: {
+    type: String,
+    default: "",
+  },
 });
-const { type, value } = toRefs(props);
+const { type, value, message } = toRefs(props);
 const inputType = ref();
 const types = {
   cin: "number",
@@ -24,30 +31,35 @@ const types = {
   password: "password",
 };
 const valid = ref(true);
-
+const validationMessage = ref("");
 inputType.value = types[type.value];
 const validateCin = () => {
   const cin = value.value;
   if (isNaN(cin)) {
-    return false;
+    valid.value = false;
+    validationMessage.value = message.value || "CIN must be a number";
   }
   //   check if the cin is 8 digits and the first digit is 1 or 0, if not check if the cin is between 1 and 7 digits
   let regex = /^$/;
   if ((cin + "").length == 8) regex = /^(1|0)\d{7}$/;
   else if ((cin + "").length < 8) regex = /^\d{1,7}$/;
-  return regex.test(cin);
+  valid.value = regex.test(cin);
+  validationMessage.value = message.value || "CIN is not valid";
 };
 const validate = () => {
   if (type.value === "cin") {
-    valid.value = validateCin();
+    validateCin();
   }
 };
 watch(value, validate);
 </script>
 <style lang="scss">
 .vtv-invalid {
-  input {
-    border-color: red;
-  }
+  width: fit-content;
+  border: 2px solid red;
+}
+.vtv-error-message {
+  display: block;
+  color: red;
 }
 </style>
