@@ -56,11 +56,6 @@ const validatePhone = () => {
   let regex = /^[2,5,9]\d{7}$/;
   valid.value = regex.test(phone);
   validationMessage.value = message.value || "Phone is not valid";
-  console.log(valid.value);
-  console.log(validationMessage.value);
-  console.log(regex.test(phone));
-  console.log(regex);
-  console.log(phone);
 };
 const validate = () => {
   if (type.value === "cin") {
