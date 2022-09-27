@@ -46,23 +46,39 @@ const validateCin = () => {
   valid.value = regex.test(cin);
   validationMessage.value = message.value || "CIN is not valid";
 };
+
+const validateTel = () => {
+  const Tel = value.value;
+  if (isNaN(Tel)) {
+    valid.value = false;
+    validationMessage.value = message.value || "Tel must be a number";
+  }
+  //   check if the Tel is 8 digits and the first digit is 2 or 5 or 9
+  let regex = /^[2,5,9]\d{7}$/;
+  valid.value = regex.test(Tel);
+  validationMessage.value = message.value || "Tel is not valid";
+};
+
 const validatePhone = () => {
   const phone = value.value;
   if (isNaN(phone)) {
     valid.value = false;
     validationMessage.value = message.value || "Phone must be a number";
   }
-  //   check if the phone is 8 digits and the first digit is 2 or 5 or 9
-  let regex = /^[2,5,9]\d{7}$/;
+  let regex = /^[7]\d{7}$/;
   valid.value = regex.test(phone);
   validationMessage.value = message.value || "Phone is not valid";
 };
+
 const validate = () => {
   if (type.value === "cin") {
     validateCin();
   }
   if (type.value === "phone") {
     validatePhone();
+  }
+  if (type.value === "tel") {
+    validateTel();
   }
 };
 watch(value, validate);
